@@ -1,132 +1,164 @@
-Credit Default Risk Analysis
+# Credit Default Risk Analysis
+- Application-Time Risk Scoring
+ - Project Overview
+   
 
-Application-Time Risk Scoring
+## **Problem: Predict credit default risk at the time of loan application**
 
-1. Overview
+- Goal: Estimate how risky a customer is likely to be before loan approval
 
-This project focuses on credit default risk analysis at the time of loan application.
-The objective is to estimate how risky a new applicant is likely to be, based only on information available before loan approval.
+- Approach: Treat the problem as risk scoring & ranking, not binary classification
 
-Rather than treating this as a pure classification problem, the project is approached as a risk scoring and ranking problem, which better reflects how credit models are used in practice.
+- Focus: Business-aligned decision making, not just model accuracy
+  
 
-2. Business Context
 
-In credit lending, not all mistakes have the same cost:
+## Business Context
 
-False Negative (missed defaulter): High financial loss
+- False Negative (missed defaulter): High financial loss
 
-False Positive (safe customer flagged risky): Can be handled via manual review
+- False Positive (safe customer flagged risky): Can be handled via manual review
 
-Because of this cost asymmetry:
+Key implication:
 
-Accuracy is not a reliable metric
+- Accuracy is misleading
 
-Recall on defaulters is prioritized
+- Recall for defaulters is prioritized
 
-The model is evaluated as a decision-support tool, not a final decision-maker
+- Model acts as a decision-support system, not an auto-approval engine
 
-3. Dataset
 
-Source: Home Credit Default Risk dataset
 
-Target variable:
+## Dataset
 
-0 → Loan repaid
+- Source: Home Credit Default Risk
 
-1 → Loan default
+- Target Variable:
 
-Class distribution: ~92% non-defaulters, ~8% defaulters
+- 0 → Loan repaid
 
-Initial features: ~120
+- 1 → Loan default
 
-Final selected features: 44
+- Class Imbalance: ~92% non-defaulters, ~8% defaulters
 
-Only application-time features are used to avoid data leakage.
+- Initial Features: ~120
 
-Note: Raw data is not included in this repository due to size and licensing constraints.
+- Final Selected Features: 44
 
-4. Analytical Approach
+- Data Scope: Application-time features only (to avoid data leakage)
 
-To manage the high dimensionality of the dataset, features were grouped based on risk logic and domain understanding:
+Note: Raw data not included due to size and licensing constraints.
 
-Identity & demographics
 
-Repayment capacity & income stability
 
-Assets & wealth
+## Analytical Strategy
 
-Housing quality & living conditions
+- Features grouped using credit risk logic:
 
-Credit history & external risk
+1. Identity & Demographics
 
-Contactability & digital stability
+2. Repayment Capacity & Income Stability
 
-Address & work location consistency
+3. Assets & Wealth
 
-This grouping allowed focused EDA and helped identify strong, weak, and noisy signals before modeling.
+4. Housing Quality & Living Conditions
 
-5. Feature Engineering
+5. Credit History & External Risk
 
-Instead of relying only on raw monetary values, ratio-based features were created to capture repayment stress:
+6. Contactability & Digital Stability
 
-Repayment burden ratio (annuity / income)
+7. Address & Work Location Consistency
 
-Credit-to-income ratio
+- Outcome:
 
-Loan-to-goods value ratio
+Identification of strong signals, supporting signals, and weak/noisy features
 
-These ratios provided clearer economic meaning and exposed risk patterns not visible in raw features.
 
-6. Modeling Strategy
 
-Model type: Interpretable baseline classifier
+## Feature Engineering
 
-Train-test split: Stratified
+- Focus on economically meaningful ratios:
 
-Class imbalance handling: class_weight = 'balanced'
+- Repayment Burden Ratio → annuity / income
 
-Evaluation focus:
+- Credit-to-Income Ratio
 
-Recall (defaulters)
+- Loan-to-Goods Value Ratio
 
-ROC-AUC
+Why ratios?
 
-Risk decile analysis
+- Capture repayment stress
 
-Resampling techniques were intentionally avoided to preserve the original data distribution.
+- More informative than raw monetary values
 
-7. Key Results
+- Align with how banks assess affordability
+  
 
-Recall (defaulters): ~67%
 
-Precision: ~16% (expected trade-off)
+## Modeling Approach
 
-ROC-AUC: ~74%
+- Model Type: Interpretable baseline classifier
 
-Risk decile analysis shows clear monotonic separation:
+- Train-Test Split: Stratified
 
-Top deciles have default rates multiple times higher than average
+- Class Imbalance Handling: class_weight = 'balanced'
 
-Bottom deciles show very low default rates
+- No resampling (original distribution preserved)
 
-This confirms the model’s ability to rank applicants by risk.
+Evaluation Metrics:
 
-8. How the Model Would Be Used
+- Recall (Defaulters)
 
-This model is not designed for direct loan approval.
+- ROC-AUC
 
-A realistic usage would be:
+- Risk Decile Analysis
 
-High-risk applicants: rejection or strict manual review
 
-Medium-risk applicants: detailed underwriting
 
-Low-risk applicants: fast-track approval
+## Key Results
 
-The model helps prioritize attention and reduce costly mistakes, rather than automate decisions blindly.
+- Recall (Defaulters): ~67%
 
+- Precision: ~16% (expected trade-off)
 
-11. Key Takeaway
+- ROC-AUC: ~74%
 
-A strong credit risk model is not defined by high accuracy,
-but by how well it supports risk-aware, real-world decision-making.
+Risk Deciles:
+
+- Top Deciles: Default rate multiple times higher than average
+
+- Bottom Deciles: Very low default rate
+
+-  Confirms model effectiveness as a risk-ranking system
+
+
+
+## How the Model Would Be Used
+
+- Not for direct approval / rejection
+
+Practical usage:
+
+- High-risk applicants: Reject or strict manual review
+
+- Medium-risk applicants: Detailed underwriting
+
+- Low-risk applicants: Fast-track approval
+
+Purpose:
+
+- Prioritize attention
+
+- Reduce costly mistakes
+
+- Support human decision-making
+
+
+
+## Key Takeaway
+
+A good credit risk model is not defined by high accuracy,
+but by how well it supports risk-aware, real-world decisions.
+
+This project emphasizes feature understanding, business logic, and decision context
+over complex algorithms or metric chasing
